@@ -27,3 +27,4 @@ class Vote extends Model
     }
 }
 
+

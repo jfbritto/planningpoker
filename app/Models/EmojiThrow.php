@@ -33,3 +33,4 @@ class EmojiThrow extends Model
     }
 }
 
+

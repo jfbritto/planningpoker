@@ -88,3 +88,4 @@ docker-compose logs -f db
 
 **Pronto para executar os comandos!** 🎉
 
+

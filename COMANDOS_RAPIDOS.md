@@ -255,3 +255,4 @@ echo "✅ Aplicação pronta! Acesse: http://localhost:8080"
 3. **Porta 8080:** Se estiver em uso, altere no `docker-compose.yml`
 4. **.env:** Nunca commite o arquivo `.env` no Git (já está no .gitignore)
 
+

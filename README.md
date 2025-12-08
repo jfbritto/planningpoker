@@ -45,3 +45,4 @@ Consulte o arquivo `DEPLOY.md` para instruções detalhadas de deploy.
 - **votes**: Votos dos participantes
 
 # planningpoker
+
