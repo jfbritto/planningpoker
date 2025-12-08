@@ -1,12 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Planning Poker')
-@section('description', 'Sistema colaborativo de Planning Poker para estimativas ágeis. Crie salas, vote em tempo real e alcance consenso rapidamente com sua equipe!')
-@section('og_title', 'Planning Poker')
-@section('og_description', 'Sistema colaborativo de Planning Poker. Crie salas, vote em tempo real, revele resultados e alcance consenso rapidamente com sua equipe!')
-@section('og_image', '{{ url('/img/logo.png') }}')
-@section('og_url', '{{ url('https://planningpoker.soavelveiculos.com.br/') }}')
-
+<meta property="og:title" content="Planning Poker">
+<meta property="og:description" content="Sistema colaborativo de Planning Poker para estimativas ágeis. Crie salas, vote em tempo real e alcance consenso rapidamente com sua equipe!">
+<meta property="og:image" content="/img/logo.jpg">
+<meta property="og:url" content="https://planningpoker.soavelveiculos.com.br/">
+<meta property="og:type" content="website">
 
 @section('content')
 <!-- Hero Section -->
