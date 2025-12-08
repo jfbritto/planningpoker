@@ -1,4 +1,36 @@
-<?php $__env->startSection('title', 'Sala: ' . $room->name); ?>
+<?php
+    // Verificar se as variáveis existem antes de usar
+    $participantsCount = isset($participants) ? $participants->count() : 0;
+    $activeStoryExists = isset($activeStory) && $activeStory !== null;
+    
+    $votedCount = 0;
+    if ($activeStoryExists && isset($participants)) {
+        $votedCount = $participants->filter(function($p) use ($activeStory) { 
+            return $p->votes->where('story_id', $activeStory->id)->isNotEmpty(); 
+        })->count();
+    }
+    
+    $hasActiveVoting = $activeStoryExists && !$activeStory->is_revealed;
+    $isVotingComplete = $activeStoryExists && $votedCount === $participantsCount && $participantsCount > 0;
+    
+    // Descrição personalizada baseada no estado da sala
+    if ($hasActiveVoting) {
+        $statusText = $isVotingComplete 
+            ? "Todos os {$participantsCount} participantes já votaram!" 
+            : "{$votedCount} de {$participantsCount} participantes votaram. Entre e participe!";
+        $description = "Sala: {$room->name} (Código: {$room->code}). {$statusText}";
+    } else {
+        $description = "Sala: {$room->name} (Código: {$room->code}). {$participantsCount} participante(s). Entre e participe das estimativas!";
+    }
+    
+    $ogTitle = "Sala: {$room->name} - Planning Poker";
+    $ogDescription = $description;
+?>
+
+<?php $__env->startSection('title', 'Sala: ' . $room->name . ' - Planning Poker'); ?>
+<?php $__env->startSection('description', $description); ?>
+<?php $__env->startSection('og_title', $ogTitle); ?>
+<?php $__env->startSection('og_description', $ogDescription); ?>
 
 <?php $__env->startSection('content'); ?>
 <div class="card room-header">

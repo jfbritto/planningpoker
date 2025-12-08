@@ -1,10 +1,19 @@
 @extends('layouts.app')
 
 @php
-    $participantsCount = $participants->count();
-    $votedCount = $activeStory ? $participants->filter(function($p) { return $p->votes->where('story_id', $activeStory->id)->isNotEmpty(); })->count() : 0;
-    $hasActiveVoting = $activeStory && !$activeStory->is_revealed;
-    $isVotingComplete = $activeStory && $votedCount === $participantsCount && $participantsCount > 0;
+    // Verificar se as variáveis existem antes de usar
+    $participantsCount = isset($participants) ? $participants->count() : 0;
+    $activeStoryExists = isset($activeStory) && $activeStory !== null;
+    
+    $votedCount = 0;
+    if ($activeStoryExists && isset($participants)) {
+        $votedCount = $participants->filter(function($p) use ($activeStory) { 
+            return $p->votes->where('story_id', $activeStory->id)->isNotEmpty(); 
+        })->count();
+    }
+    
+    $hasActiveVoting = $activeStoryExists && !$activeStory->is_revealed;
+    $isVotingComplete = $activeStoryExists && $votedCount === $participantsCount && $participantsCount > 0;
     
     // Descrição personalizada baseada no estado da sala
     if ($hasActiveVoting) {
