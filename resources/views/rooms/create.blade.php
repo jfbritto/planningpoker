@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Criar Sala - Planning Poker')
+@section('description', 'Crie uma nova sala de Planning Poker e comece suas estimativas ágeis. Sistema gratuito, rápido e colaborativo!')
+@section('og_title', 'Criar Sala - Planning Poker')
+@section('og_description', 'Crie uma nova sala de Planning Poker e comece suas estimativas ágeis. Sistema gratuito, rápido e colaborativo!')
 
 @section('content')
 <div class="card">

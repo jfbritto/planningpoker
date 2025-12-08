@@ -28,3 +28,4 @@ class Vote extends Model
 }
 
 
+

@@ -1,6 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'Sala: ' . $room->name)
+@php
+    $participantsCount = $participants->count();
+    $votedCount = $activeStory ? $participants->filter(function($p) { return $p->votes->where('story_id', $activeStory->id)->isNotEmpty(); })->count() : 0;
+    $hasActiveVoting = $activeStory && !$activeStory->is_revealed;
+    $isVotingComplete = $activeStory && $votedCount === $participantsCount && $participantsCount > 0;
+    
+    // Descrição personalizada baseada no estado da sala
+    if ($hasActiveVoting) {
+        $statusText = $isVotingComplete 
+            ? "Todos os {$participantsCount} participantes já votaram!" 
+            : "{$votedCount} de {$participantsCount} participantes votaram. Entre e participe!";
+        $description = "Sala: {$room->name} (Código: {$room->code}). {$statusText}";
+    } else {
+        $description = "Sala: {$room->name} (Código: {$room->code}). {$participantsCount} participante(s). Entre e participe das estimativas!";
+    }
+    
+    $ogTitle = "Sala: {$room->name} - Planning Poker";
+    $ogDescription = $description;
+@endphp
+
+@section('title', 'Sala: ' . $room->name . ' - Planning Poker')
+@section('description', $description)
+@section('og_title', $ogTitle)
+@section('og_description', $ogDescription)
 
 @section('content')
 <div class="card room-header">

@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Planning Poker')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Meta Tags para Compartilhamento Social (WhatsApp, Facebook, etc.) -->
+    <meta name="description" content="@yield('description', 'Sistema gratuito e colaborativo de Planning Poker para estimativas ágeis. Crie salas, vote em tempo real e alcance consenso rapidamente!')">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('og_title', 'Planning Poker - Sistema de Estimativas Ágeis')">
+    <meta property="og:description" content="@yield('og_description', 'Sistema gratuito e colaborativo de Planning Poker. Crie salas, vote em tempo real, revele resultados e alcance consenso rapidamente com sua equipe!')">
+    <meta property="og:image" content="{{ url('/og-image.svg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Planning Poker">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('og_title', 'Planning Poker - Sistema de Estimativas Ágeis')">
+    <meta name="twitter:description" content="@yield('og_description', 'Sistema gratuito e colaborativo de Planning Poker. Crie salas, vote em tempo real e alcance consenso rapidamente!')">
+    <meta name="twitter:image" content="{{ url('/og-image.svg') }}">
+    
+    <!-- Favicon - Compatível com todos os navegadores -->
+    <link rel="icon" type="image/svg+xml" href="{{ url('/favicon.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="{{ url('/favicon.svg') }}">
+    <link rel="shortcut icon" href="{{ url('/favicon.svg') }}">
+    <link rel="shortcut icon" href="/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('/favicon.svg') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url('/favicon.svg') }}">
+    <meta name="theme-color" content="#667eea">
     <style>
         * {
             margin: 0;

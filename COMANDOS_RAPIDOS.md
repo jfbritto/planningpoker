@@ -256,3 +256,4 @@ echo "✅ Aplicação pronta! Acesse: http://localhost:8080"
 4. **.env:** Nunca commite o arquivo `.env` no Git (já está no .gitignore)
 
 
+

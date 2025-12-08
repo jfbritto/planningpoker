@@ -1,17 +1,68 @@
 @extends('layouts.app')
 
-@section('title', 'Planning Poker - Início')
+@section('title', 'Planning Poker - Sistema de Estimativas Ágeis')
+@section('description', 'Sistema gratuito e colaborativo de Planning Poker para estimativas ágeis. Crie salas, vote em tempo real e alcance consenso rapidamente com sua equipe!')
+@section('og_title', 'Planning Poker - Sistema de Estimativas Ágeis')
+@section('og_description', 'Sistema gratuito e colaborativo de Planning Poker. Crie salas, vote em tempo real, revele resultados e alcance consenso rapidamente com sua equipe!')
 
 @section('content')
-<div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
-        <div>
-            <h1 style="margin-bottom: 4px;">🎴 Planning Poker</h1>
-            <p style="color: #666; font-size: 13px; margin: 0;">
-                Sistema simples e objetivo para estimativas ágeis
+<!-- Hero Section -->
+<div class="card hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 24px; text-align: center; border: none; box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="font-size: 64px; margin-bottom: 16px; line-height: 1;">🎴</div>
+        <h1 style="font-size: 36px; font-weight: 700; margin-bottom: 16px; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+            Planning Poker
+        </h1>
+        <p style="font-size: 20px; margin-bottom: 8px; color: rgba(255,255,255,0.95); font-weight: 500;">
+            Sistema de Estimativas Ágeis
+        </p>
+        <p style="font-size: 16px; margin-bottom: 24px; color: rgba(255,255,255,0.85); line-height: 1.6;">
+            Crie salas colaborativas, vote em tempo real e alcance consenso rapidamente com sua equipe. 
+            <strong>Gratuito, rápido e fácil de usar!</strong>
+        </p>
+        <a href="{{ route('rooms.create') }}" class="btn" style="background: white; color: #667eea; font-size: 18px; padding: 14px 32px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            🚀 Criar Nova Sala
+        </a>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="card" style="margin-top: 20px;">
+    <h2 style="font-size: 24px; margin-bottom: 20px; color: #333; text-align: center;">✨ Por que usar nosso Planning Poker?</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 24px;">
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px;">
+            <div style="font-size: 48px; margin-bottom: 12px;">🆓</div>
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #333;">100% Gratuito</h3>
+            <p style="font-size: 14px; color: #666; line-height: 1.5;">Sem custos, sem cadastro, sem complicação. Use quantas vezes quiser!</p>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px;">
+            <div style="font-size: 48px; margin-bottom: 12px;">⚡</div>
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #333;">Tempo Real</h3>
+            <p style="font-size: 14px; color: #666; line-height: 1.5;">Votos e atualizações aparecem instantaneamente para todos os participantes.</p>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px;">
+            <div style="font-size: 48px; margin-bottom: 12px;">👥</div>
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #333;">Colaborativo</h3>
+            <p style="font-size: 14px; color: #666; line-height: 1.5;">Múltiplos participantes podem votar simultaneamente na mesma sala.</p>
+        </div>
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px;">
+            <div style="font-size: 48px; margin-bottom: 12px;">📱</div>
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #333;">Responsivo</h3>
+            <p style="font-size: 14px; color: #666; line-height: 1.5;">Funciona perfeitamente em desktop, tablet e celular. Acesse de qualquer lugar!</p>
+        </div>
+    </div>
+</div>
+
+<!-- Main Action Card -->
+<div class="card" style="background: white; border: 2px solid #667eea;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div style="flex: 1; min-width: 200px;">
+            <h2 style="font-size: 20px; margin-bottom: 8px; color: #333;">🎯 Comece Agora</h2>
+            <p style="color: #666; font-size: 14px; margin: 0;">
+                Crie sua primeira sala de Planning Poker em segundos
             </p>
         </div>
-        <a href="{{ route('rooms.create') }}" class="btn">
+        <a href="{{ route('rooms.create') }}" class="btn" style="font-size: 16px; padding: 12px 24px;">
             Criar Nova Sala
         </a>
     </div>
@@ -52,14 +103,31 @@
     </div>
 @endif
 
-<div class="card">
-    <h2 style="font-size: 16px; margin-bottom: 12px;">Como usar:</h2>
-    <ol style="line-height: 1.8; color: #666; font-size: 13px; padding-left: 20px;">
-        <li>Crie uma nova sala ou entre em uma sala existente</li>
-        <li>Os participantes votam usando os cartões de Planning Poker</li>
-        <li>Revele os votos para ver os resultados</li>
-        <li>Discuta as diferenças e chegue a um consenso</li>
-    </ol>
+<!-- How to Use Section -->
+<div class="card" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <h2 style="font-size: 24px; margin-bottom: 20px; color: #333; text-align: center;">📖 Como Funciona?</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="font-size: 32px; margin-bottom: 8px; text-align: center;">1️⃣</div>
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #333; text-align: center;">Crie uma Sala</h3>
+            <p style="font-size: 13px; color: #666; line-height: 1.5; text-align: center;">Crie uma nova sala ou entre em uma sala existente usando o código</p>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="font-size: 32px; margin-bottom: 8px; text-align: center;">2️⃣</div>
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #333; text-align: center;">Vote</h3>
+            <p style="font-size: 13px; color: #666; line-height: 1.5; text-align: center;">Os participantes votam usando os cartões de Planning Poker (Fibonacci)</p>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="font-size: 32px; margin-bottom: 8px; text-align: center;">3️⃣</div>
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #333; text-align: center;">Revele</h3>
+            <p style="font-size: 13px; color: #666; line-height: 1.5; text-align: center;">Revele os votos para ver os resultados e a média automaticamente</p>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="font-size: 32px; margin-bottom: 8px; text-align: center;">4️⃣</div>
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #333; text-align: center;">Consenso</h3>
+            <p style="font-size: 13px; color: #666; line-height: 1.5; text-align: center;">Discuta as diferenças e chegue a um consenso com sua equipe</p>
+        </div>
+    </div>
 </div>
 
 <div class="card" style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border: none;">

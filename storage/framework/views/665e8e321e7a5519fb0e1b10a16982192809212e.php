@@ -1,4 +1,7 @@
 <?php $__env->startSection('title', 'Criar Sala - Planning Poker'); ?>
+<?php $__env->startSection('description', 'Crie uma nova sala de Planning Poker e comece suas estimativas ágeis. Sistema gratuito, rápido e colaborativo!'); ?>
+<?php $__env->startSection('og_title', 'Criar Sala - Planning Poker'); ?>
+<?php $__env->startSection('og_description', 'Crie uma nova sala de Planning Poker e comece suas estimativas ágeis. Sistema gratuito, rápido e colaborativo!'); ?>
 
 <?php $__env->startSection('content'); ?>
 <div class="card">
