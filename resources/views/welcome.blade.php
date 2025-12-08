@@ -4,8 +4,8 @@
 @section('description', 'Sistema colaborativo de Planning Poker para estimativas ágeis. Crie salas, vote em tempo real e alcance consenso rapidamente com sua equipe!')
 @section('og_title', 'Planning Poker')
 @section('og_description', 'Sistema colaborativo de Planning Poker. Crie salas, vote em tempo real, revele resultados e alcance consenso rapidamente com sua equipe!')
-@section('og_image', '{{ url('/og-image.svg') }}')
-@section('og_url', '{{ url('/') }}')
+@section('og_image', '{{ url('/img/logo.png') }}')
+@section('og_url', '{{ url('https://planningpoker.soavelveiculos.com.br/') }}')
 
 
 @section('content')
