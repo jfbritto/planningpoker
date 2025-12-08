@@ -5,6 +5,7 @@
 /vendor
 .env
 .env.backup
+.env.production
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -12,12 +13,17 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-.htaccess
-/storage/logs/*
+
+# Laravel specific
+/storage/logs/*.log
 /storage/framework/cache/*
 /storage/framework/sessions/*
 /storage/framework/views/*
-/storage/framework/cache/data/*
-/storage/framework/cache/data/*
+!/storage/framework/cache/.gitignore
+!/storage/framework/sessions/.gitignore
+!/storage/framework/views/.gitignore
+!/storage/logs/.gitignore
 
-
+# OS specific
+.DS_Store
+Thumbs.db
