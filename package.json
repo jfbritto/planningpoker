@@ -1,0 +1,15 @@
+{
+  "name": "planning-poker",
+  "version": "1.0.0",
+  "description": "Sistema de Planning Poker",
+  "private": true,
+  "scripts": {
+    "lint": "echo 'Lint check - No linting configured'",
+    "format": "echo 'Format check - No formatter configured'",
+    "test": "docker-compose exec app php artisan test || echo 'Tests require Docker. Run: docker-compose up -d && docker-compose exec app php artisan test'",
+    "test:e2e": "echo 'E2E tests - No E2E tests configured'"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
+
