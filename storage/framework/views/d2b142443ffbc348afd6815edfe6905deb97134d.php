@@ -746,6 +746,9 @@
         <?php echo $__env->yieldContent('content'); ?>
     </div>
     
+    <!-- SweetAlert2 - Biblioteca de alertas moderna -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <?php echo $__env->yieldContent('scripts'); ?>
 </body>
 </html>

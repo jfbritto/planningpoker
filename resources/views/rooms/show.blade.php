@@ -53,9 +53,9 @@
                     <div style="width: 8px; height: 8px; background: #28a745; border-radius: 50%;"></div>
                     <span style="font-size: 12px; color: #333; font-weight: 500;">{{ $participant->name }}</span>
                 </div>
-                <form method="POST" action="{{ route('rooms.leave', $room->code) }}" style="margin: 0;" onsubmit="return confirm('Tem certeza que deseja sair da sala?');">
+                <form method="POST" action="{{ route('rooms.leave', $room->code) }}" id="leave-room-form" style="margin: 0;">
                     @csrf
-                    <button type="submit" style="padding: 6px 12px; font-size: 11px; background: transparent; border: 1px solid #dc3545; color: #dc3545; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">
+                    <button type="button" onclick="confirmLeaveRoom()" style="padding: 6px 12px; font-size: 11px; background: transparent; border: 1px solid #dc3545; color: #dc3545; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">
                         Sair da Sala
                     </button>
                 </form>
@@ -211,6 +211,26 @@
 
 
 @section('scripts')
+    <script>
+        // Função para confirmar saída da sala usando SweetAlert
+        function confirmLeaveRoom() {
+            Swal.fire({
+                title: 'Sair da Sala?',
+                text: 'Tem certeza que deseja sair da sala?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, sair',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('leave-room-form').submit();
+                }
+            });
+        }
+    </script>
 <script>
     const roomCode = '{{ $room->code }}';
     
@@ -348,12 +368,22 @@
                     updateVotesStatus();
                 } else {
                     console.error('Erro ao votar:', data.message || 'Erro desconhecido');
-                    alert(data.message || 'Erro ao registrar voto. Tente novamente.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro ao votar',
+                        text: data.message || 'Erro ao registrar voto. Tente novamente.',
+                        confirmButtonColor: '#667eea'
+                    });
                 }
             })
             .catch(error => {
                 console.error('Erro ao votar:', error);
-                alert(error.message || 'Erro ao registrar voto. Tente novamente.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro ao votar',
+                    text: error.message || 'Erro ao registrar voto. Tente novamente.',
+                    confirmButtonColor: '#667eea'
+                });
             });
         });
     });
@@ -483,7 +513,12 @@
         if (typeof celebrateConsensus === 'function') {
             celebrateConsensus();
         } else {
-            alert('Função celebrateConsensus não encontrada!');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Função não encontrada',
+                text: 'Função celebrateConsensus não encontrada!',
+                confirmButtonColor: '#667eea'
+            });
         }
     };
     
@@ -593,12 +628,22 @@
                 // Recarregar página para todos os usuários verem a nova estimativa
                 location.reload();
             } else {
-                alert(data.message || 'Erro ao iniciar nova estimativa');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: data.message || 'Erro ao iniciar nova estimativa',
+                    confirmButtonColor: '#667eea'
+                });
             }
         })
         .catch(error => {
             console.error('Erro ao iniciar nova estimativa:', error);
-            alert(error.message || 'Erro ao iniciar nova estimativa. Tente novamente.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: error.message || 'Erro ao iniciar nova estimativa. Tente novamente.',
+                confirmButtonColor: '#667eea'
+            });
         });
     }
     
