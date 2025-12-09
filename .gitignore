@@ -24,6 +24,14 @@ yarn-error.log
 !/storage/framework/views/.gitignore
 !/storage/logs/.gitignore
 
+# Bootstrap cache (gerado automaticamente pelo Laravel)
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitignore
+
+# .htaccess pode ser específico do servidor
+# Descomente a linha abaixo se quiser ignorar o .htaccess
+# .htaccess
+
 # OS specific
 .DS_Store
 Thumbs.db
