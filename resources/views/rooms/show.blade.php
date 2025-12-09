@@ -64,6 +64,31 @@
     </div>
 </div>
 
+<!-- Informação do Administrador -->
+@if($creatorParticipant)
+    <div id="creator-info-card" class="card" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border-left: 4px solid #ffc107; margin-top: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div style="font-size: 24px;">👑</div>
+            <div style="flex: 1;">
+                <div style="font-size: 12px; color: #856404; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                    Administrador da Sala
+                </div>
+                <div style="font-size: 14px; color: #856404; font-weight: 500;">
+                    <strong>{{ $creatorParticipant->name }}</strong>
+                </div>
+                <div style="font-size: 11px; color: #856404; margin-top: 4px; opacity: 0.8;">
+                    Pode revelar votos e iniciar novas estimativas
+                </div>
+            </div>
+            @if($isCreator)
+                <div style="padding: 4px 12px; background: rgba(255, 193, 7, 0.2); border-radius: 12px; font-size: 11px; color: #856404; font-weight: 600;">
+                    Você é o administrador
+                </div>
+            @endif
+        </div>
+    </div>
+@endif
+
 @if(!$participant)
     <div class="card" style="background: #fff3cd; border-left: 3px solid #ffc107;">
         <h3 style="font-size: 14px; margin-bottom: 12px;">Entrar na Sala</h3>
@@ -794,6 +819,9 @@
                 // Atualizar lista completa de status dos votos
                 updateVotesList(data.votes);
                 
+                // Atualizar exibição do administrador
+                updateCreatorDisplay(data.creator, data.is_creator);
+                
                 // Mostrar botão de revelar se todos votaram e for o criador
                 const revealBtn = document.getElementById('reveal-btn');
                 if (revealBtn && data.is_creator && data.total_votes === data.total_participants && data.total_participants > 0) {
@@ -934,6 +962,53 @@
                 delete card.dataset.emojiInitialized;
             });
             initEmojiSystem();
+        }
+    }
+    
+    // Função para atualizar exibição do administrador
+    function updateCreatorDisplay(creatorData, isCurrentUserCreator) {
+        let creatorCard = document.getElementById('creator-info-card');
+        
+        if (creatorData) {
+            if (!creatorCard) {
+                // Criar o card do administrador se não existir
+                const roomHeader = document.querySelector('.room-header');
+                if (roomHeader) {
+                    creatorCard = document.createElement('div');
+                    creatorCard.id = 'creator-info-card';
+                    creatorCard.className = 'card';
+                    creatorCard.style.cssText = 'background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border-left: 4px solid #ffc107; margin-top: 12px;';
+                    roomHeader.parentNode.insertBefore(creatorCard, roomHeader.nextSibling);
+                } else {
+                    return; // Não encontrou onde inserir
+                }
+            }
+            
+            // Atualizar conteúdo
+            creatorCard.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <div style="font-size: 24px;">👑</div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 12px; color: #856404; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                            Administrador da Sala
+                        </div>
+                        <div style="font-size: 14px; color: #856404; font-weight: 500;">
+                            <strong>${creatorData.name}</strong>
+                        </div>
+                        <div style="font-size: 11px; color: #856404; margin-top: 4px; opacity: 0.8;">
+                            Pode revelar votos e iniciar novas estimativas
+                        </div>
+                    </div>
+                    ${isCurrentUserCreator ? `
+                        <div style="padding: 4px 12px; background: rgba(255, 193, 7, 0.2); border-radius: 12px; font-size: 11px; color: #856404; font-weight: 600;">
+                            Você é o administrador
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        } else if (creatorCard) {
+            // Remover card se não houver criador
+            creatorCard.remove();
         }
     }
     

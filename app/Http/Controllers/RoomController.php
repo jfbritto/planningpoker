@@ -229,10 +229,18 @@ class RoomController extends Controller
         // Usar o participante atual que já foi buscado/atualizado acima
         $participant = $currentParticipant;
 
+        // Buscar o participante criador da sala (administrador)
+        $creatorParticipant = null;
+        if ($room->creator_session_id) {
+            $creatorParticipant = $room->participants()
+                ->where('session_id', $room->creator_session_id)
+                ->first();
+        }
+
         // Ler nome do cookie para preencher automaticamente
         $savedName = $request->cookie('participant_name');
 
-        return view('rooms.show', compact('room', 'activeStory', 'participants', 'participant', 'hasUnrevealedStory', 'isCreator', 'savedName'));
+        return view('rooms.show', compact('room', 'activeStory', 'participants', 'participant', 'hasUnrevealedStory', 'isCreator', 'savedName', 'creatorParticipant'));
     }
 
     public function getVotesStatus(Request $request, $code)
@@ -345,6 +353,14 @@ class RoomController extends Controller
                 ];
             });
         
+        // Buscar o participante criador da sala (administrador)
+        $creatorParticipant = null;
+        if ($room->creator_session_id) {
+            $creatorParticipant = $room->participants()
+                ->where('session_id', $room->creator_session_id)
+                ->first();
+        }
+        
         if (!$activeStory) {
             $response = [
                 'has_story' => false,
@@ -353,6 +369,10 @@ class RoomController extends Controller
                 'emoji_throws' => $recentEmojiThrows,
                 'participants' => $allParticipants,
                 'participants_count' => $allParticipants->count(),
+                'creator' => $creatorParticipant ? [
+                    'id' => $creatorParticipant->id,
+                    'name' => $creatorParticipant->name,
+                ] : null,
             ];
             
             // Cachear também quando não há história
@@ -466,6 +486,10 @@ class RoomController extends Controller
             'participants_count' => $allParticipants->count(),
             'emoji_throws' => $recentEmojiThrows,
             'all_same_vote' => $allSame,
+            'creator' => $creatorParticipant ? [
+                'id' => $creatorParticipant->id,
+                'name' => $creatorParticipant->name,
+            ] : null,
         ];
         
         // Cachear resposta por 2 segundos (apenas para não-criadores)
