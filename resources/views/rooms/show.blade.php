@@ -1274,75 +1274,68 @@
                 // Função para posicionar o picker responsivamente
                 function positionPicker() {
                     const cardRect = card.getBoundingClientRect();
-                    const pickerRect = picker.getBoundingClientRect();
                     const viewportWidth = window.innerWidth;
                     const viewportHeight = window.innerHeight;
-                    const padding = 10; // Espaçamento mínimo da borda da tela
+                    const padding = 12; // Espaçamento mínimo da borda da tela
+                    const verticalOffset = 8; // Espaçamento do card
                     
-                    // Resetar transform
+                    // Resetar estilos
                     picker.style.transform = '';
                     picker.style.top = '';
                     picker.style.bottom = '';
                     picker.style.left = '';
                     picker.style.right = '';
                     
-                    // Calcular posição horizontal
-                    const cardCenterX = cardRect.left + (cardRect.width / 2);
-                    const pickerWidth = pickerRect.width || 200; // Estimativa se ainda não renderizado
-                    const halfPickerWidth = pickerWidth / 2;
+                    // Usar dimensões fixas do CSS (200px de largura)
+                    const pickerWidth = 200; // Largura fixa definida no CSS
+                    const pickerHeight = 120; // Altura estimada (4 linhas de emojis + padding)
                     
-                    let leftPosition;
+                    // Calcular posição horizontal (centralizar no card)
+                    const cardCenterX = cardRect.left + (cardRect.width / 2);
+                    let leftPosition = cardCenterX - (pickerWidth / 2);
                     let transformX = '';
                     
-                    // Tentar centralizar no card primeiro
-                    leftPosition = cardCenterX;
-                    transformX = 'translateX(-50%)';
-                    
-                    // Verificar se ultrapassa à esquerda
-                    const leftBound = leftPosition - halfPickerWidth;
-                    if (leftBound < padding) {
-                        leftPosition = cardRect.left + padding;
-                        transformX = 'translateX(0)';
+                    // Ajustar se ultrapassar à esquerda
+                    if (leftPosition < padding) {
+                        leftPosition = padding;
+                        transformX = '';
                     }
-                    // Verificar se ultrapassa à direita
-                    else {
-                        const rightBound = leftPosition + halfPickerWidth;
-                        if (rightBound > viewportWidth - padding) {
-                            leftPosition = viewportWidth - pickerWidth - padding;
-                            transformX = 'translateX(0)';
-                        }
+                    // Ajustar se ultrapassar à direita
+                    else if (leftPosition + pickerWidth > viewportWidth - padding) {
+                        leftPosition = viewportWidth - pickerWidth - padding;
+                        transformX = '';
+                    } else {
+                        // Centralizar usando transform para precisão
+                        leftPosition = cardCenterX;
+                        transformX = 'translateX(-50%)';
                     }
                     
                     // Calcular posição vertical
                     const spaceAbove = cardRect.top;
                     const spaceBelow = viewportHeight - cardRect.bottom;
-                    const pickerHeight = pickerRect.height || 50; // Estimativa
-                    const verticalOffset = 8; // Espaçamento do card
+                    let topPosition;
                     
-                    let topPosition, bottomPosition;
-                    
-                    // Preferir acima, mas verificar se há espaço
+                    // Preferir acima se houver espaço suficiente
                     if (spaceAbove >= pickerHeight + verticalOffset + padding) {
-                        // Posicionar acima
-                        picker.style.top = `-${pickerHeight + verticalOffset}px`;
-                        picker.style.bottom = 'auto';
-                    } else if (spaceBelow >= pickerHeight + verticalOffset + padding) {
-                        // Posicionar abaixo
-                        picker.style.top = `${cardRect.height + verticalOffset}px`;
-                        picker.style.bottom = 'auto';
-                    } else {
-                        // Não há espaço suficiente, usar o lado com mais espaço
+                        topPosition = cardRect.top - pickerHeight - verticalOffset;
+                    }
+                    // Se não houver espaço acima, posicionar abaixo
+                    else if (spaceBelow >= pickerHeight + verticalOffset + padding) {
+                        topPosition = cardRect.bottom + verticalOffset;
+                    }
+                    // Se não houver espaço suficiente em nenhum lado, usar o lado com mais espaço
+                    else {
                         if (spaceAbove > spaceBelow) {
-                            picker.style.top = `-${Math.min(pickerHeight + verticalOffset, spaceAbove - padding)}px`;
-                            picker.style.bottom = 'auto';
+                            topPosition = Math.max(padding, cardRect.top - pickerHeight - verticalOffset);
                         } else {
-                            picker.style.top = `${cardRect.height + verticalOffset}px`;
-                            picker.style.bottom = 'auto';
+                            topPosition = Math.min(viewportHeight - pickerHeight - padding, cardRect.bottom + verticalOffset);
                         }
                     }
                     
-                    // Aplicar posição horizontal
+                    // Aplicar posições
+                    picker.style.position = 'fixed';
                     picker.style.left = `${leftPosition}px`;
+                    picker.style.top = `${topPosition}px`;
                     if (transformX) {
                         picker.style.transform = transformX;
                     }
@@ -1351,9 +1344,11 @@
                 // Mostrar picker ao hover e posicionar responsivamente
                 card.addEventListener('mouseenter', function() {
                     picker.style.display = 'block';
-                    // Aguardar um frame para o picker ser renderizado e calcular dimensões corretas
+                    // Aguardar dois frames para garantir que o picker foi renderizado
                     requestAnimationFrame(() => {
-                        positionPicker();
+                        requestAnimationFrame(() => {
+                            positionPicker();
+                        });
                     });
                 });
                 
@@ -1376,16 +1371,25 @@
                     picker.style.display = 'block';
                     // Recalcular posição ao entrar no picker
                     requestAnimationFrame(() => {
-                        positionPicker();
+                        requestAnimationFrame(() => {
+                            positionPicker();
+                        });
                     });
                 });
                 
-                // Recalcular posição ao redimensionar a janela
-                window.addEventListener('resize', function() {
-                    if (picker.style.display === 'block') {
-                        positionPicker();
-                    }
-                });
+                // Recalcular posição ao redimensionar a janela ou fazer scroll
+                let resizeTimeout;
+                function handleResizeOrScroll() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        if (picker.style.display === 'block') {
+                            positionPicker();
+                        }
+                    }, 100);
+                }
+                
+                window.addEventListener('resize', handleResizeOrScroll);
+                window.addEventListener('scroll', handleResizeOrScroll, true);
                 
                 picker.addEventListener('mouseleave', function() {
                     hideTimeout = setTimeout(() => {
