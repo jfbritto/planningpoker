@@ -78,24 +78,22 @@ class RoomController extends Controller
     }
     
     /**
-     * Limpa salas antigas (mais de 24h) ou sem participantes
+     * Desativa salas antigas (mais de 24h) ou sem participantes
+     * Mantém os dados históricos (participantes, histórias, votos) para estatísticas
      */
     private function cleanupOldRooms()
     {
-        // Salas criadas há mais de 24h
-        $oldRooms = Room::where('created_at', '<', now()->subDay())->pluck('id');
+        // Salas criadas há mais de 24h - apenas desativar, não deletar
+        $oldRooms = Room::where('is_active', true)
+            ->where('created_at', '<', now()->subDay())
+            ->update(['is_active' => false]);
         
-        // Salas sem participantes
+        // Salas sem participantes ativos - apenas desativar, não deletar
         $emptyRooms = Room::where('is_active', true)
-            ->whereDoesntHave('participants')
-            ->pluck('id');
-        
-        // Combinar IDs únicos e excluir (cascade delete já está configurado nas migrations)
-        $roomsToDelete = $oldRooms->merge($emptyRooms)->unique();
-        
-        if ($roomsToDelete->isNotEmpty()) {
-            Room::whereIn('id', $roomsToDelete)->delete();
-        }
+            ->whereDoesntHave('participants', function($query) {
+                $query->where('last_activity', '>=', now()->subMinutes(10));
+            })
+            ->update(['is_active' => false]);
     }
 
     public function create()
@@ -201,13 +199,9 @@ class RoomController extends Controller
             $currentParticipant->update(['last_activity' => now()]);
         }
         
-        // Remover participantes inativos (sem atividade há mais de 30 segundos)
-        // Mas proteger o criador da sala e o participante atual
-        $room->participants()
-            ->where('last_activity', '<', now()->subSeconds(30))
-            ->where('session_id', '!=', $room->creator_session_id) // Não remover o criador
-            ->where('session_id', '!=', $sessionId) // Não remover o participante atual
-            ->delete();
+        // Não remover participantes inativos - manter histórico
+        // Apenas não contá-los como ativos nas estatísticas em tempo real
+        // Os dados permanecem no banco para estatísticas históricas
         
         $activeStory = $room->activeStory();
         $hasUnrevealedStory = $room->hasActiveUnrevealedStory();
@@ -300,13 +294,9 @@ class RoomController extends Controller
             $currentParticipant->update(['last_activity' => now()]);
         }
         
-        // Remover participantes inativos (sem atividade há mais de 30 segundos)
-        // Mas proteger o criador da sala e o participante atual
-        $room->participants()
-            ->where('last_activity', '<', now()->subSeconds(30))
-            ->where('session_id', '!=', $room->creator_session_id) // Não remover o criador
-            ->where('session_id', '!=', $sessionId) // Não remover o participante atual
-            ->delete();
+        // Não remover participantes inativos - manter histórico
+        // Apenas não contá-los como ativos nas estatísticas em tempo real
+        // Os dados permanecem no banco para estatísticas históricas
         
         // Contar histórias não reveladas
         $unrevealedCount = $room->stories()->where('is_revealed', false)->count();

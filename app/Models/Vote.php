@@ -23,7 +23,9 @@ class Vote extends Model
 
     public function participant(): BelongsTo
     {
-        return $this->belongsTo(Participant::class);
+        return $this->belongsTo(Participant::class)->withDefault([
+            'name' => 'Participante Removido',
+        ]);
     }
 }
 

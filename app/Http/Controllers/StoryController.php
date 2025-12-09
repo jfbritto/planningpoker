@@ -80,13 +80,29 @@ class StoryController extends Controller
                         $allSame = $this->checkAllSameVote($story);
                         
                         // Preparar lista de votos formatada para o frontend
-                        $votes = $story->votes->map(function($vote) {
+                        // Filtrar votos com participante válido e incluir votos órfãos (sem participante)
+                        $votes = $story->votes->filter(function($vote) {
+                            return $vote->participant !== null;
+                        })->map(function($vote) {
                             return [
                                 'id' => $vote->participant->id,
                                 'name' => $vote->participant->name,
                                 'vote_value' => $vote->value,
                             ];
                         })->values()->toArray();
+                        
+                        // Adicionar votos órfãos (sem participante) com nome genérico
+                        $orphanVotes = $story->votes->filter(function($vote) {
+                            return $vote->participant === null;
+                        })->map(function($vote) {
+                            return [
+                                'id' => null,
+                                'name' => 'Participante Removido',
+                                'vote_value' => $vote->value,
+                            ];
+                        })->values()->toArray();
+                        
+                        $votes = array_merge($votes, $orphanVotes);
                         
                         // Se não houver votos na story, buscar todos os participantes
                         if (empty($votes)) {
