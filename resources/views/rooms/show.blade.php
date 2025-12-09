@@ -1271,13 +1271,13 @@
                 
                 card.dataset.emojiInitialized = 'true';
                 
-                // Função para posicionar o picker responsivamente
+                // Função para posicionar o picker responsivamente (grudado no card)
                 function positionPicker() {
                     const cardRect = card.getBoundingClientRect();
                     const viewportWidth = window.innerWidth;
                     const viewportHeight = window.innerHeight;
-                    const padding = 12; // Espaçamento mínimo da borda da tela
-                    const verticalOffset = 8; // Espaçamento do card
+                    const padding = 8; // Espaçamento mínimo da borda da tela
+                    const verticalOffset = 2; // Espaçamento mínimo do card (grudado)
                     
                     // Resetar estilos
                     picker.style.transform = '';
@@ -1297,12 +1297,12 @@
                     
                     // Ajustar se ultrapassar à esquerda
                     if (leftPosition < padding) {
-                        leftPosition = padding;
+                        leftPosition = cardRect.left;
                         transformX = '';
                     }
                     // Ajustar se ultrapassar à direita
                     else if (leftPosition + pickerWidth > viewportWidth - padding) {
-                        leftPosition = viewportWidth - pickerWidth - padding;
+                        leftPosition = cardRect.right - pickerWidth;
                         transformX = '';
                     } else {
                         // Centralizar usando transform para precisão
@@ -1310,24 +1310,26 @@
                         transformX = 'translateX(-50%)';
                     }
                     
-                    // Calcular posição vertical
+                    // Calcular posição vertical (sempre próximo ao card)
                     const spaceAbove = cardRect.top;
                     const spaceBelow = viewportHeight - cardRect.bottom;
                     let topPosition;
                     
-                    // Preferir acima se houver espaço suficiente
-                    if (spaceAbove >= pickerHeight + verticalOffset + padding) {
+                    // Preferir acima se houver espaço suficiente (grudado)
+                    if (spaceAbove >= pickerHeight + verticalOffset) {
                         topPosition = cardRect.top - pickerHeight - verticalOffset;
                     }
-                    // Se não houver espaço acima, posicionar abaixo
-                    else if (spaceBelow >= pickerHeight + verticalOffset + padding) {
+                    // Se não houver espaço acima, posicionar abaixo (grudado)
+                    else if (spaceBelow >= pickerHeight + verticalOffset) {
                         topPosition = cardRect.bottom + verticalOffset;
                     }
-                    // Se não houver espaço suficiente em nenhum lado, usar o lado com mais espaço
+                    // Se não houver espaço suficiente, usar o lado com mais espaço mas manter grudado
                     else {
                         if (spaceAbove > spaceBelow) {
+                            // Posicionar acima, mas ajustar para não sair da tela
                             topPosition = Math.max(padding, cardRect.top - pickerHeight - verticalOffset);
                         } else {
+                            // Posicionar abaixo, mas ajustar para não sair da tela
                             topPosition = Math.min(viewportHeight - pickerHeight - padding, cardRect.bottom + verticalOffset);
                         }
                     }

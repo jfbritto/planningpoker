@@ -241,6 +241,7 @@
             pointer-events: auto;
             width: 200px;
             box-sizing: border-box;
+            margin: 0;
             /* Posicionamento será calculado dinamicamente via JavaScript */
         }
         
