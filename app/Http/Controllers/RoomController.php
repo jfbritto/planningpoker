@@ -29,6 +29,53 @@ class RoomController extends Controller
         
         return view('welcome', compact('rooms'));
     }
+
+    public function dashboard()
+    {
+        // Estatísticas gerais
+        $totalRooms = Room::count();
+        $activeRooms = Room::where('is_active', true)
+            ->where('created_at', '>=', now()->subDay())
+            ->count();
+        $totalParticipants = Participant::count();
+        $activeParticipants = Participant::where('last_activity', '>=', now()->subMinutes(10))->count();
+        $totalStories = Story::count();
+        $totalVotes = Vote::count();
+        $revealedStories = Story::where('is_revealed', true)->count();
+        
+        // Salas recentes (últimas 10)
+        $recentRooms = Room::withCount(['participants', 'stories'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+        
+        // Histórico de atividades (últimas 24h)
+        $roomsToday = Room::where('created_at', '>=', now()->subDay())->count();
+        $participantsToday = Participant::where('created_at', '>=', now()->subDay())->count();
+        $votesToday = Vote::where('created_at', '>=', now()->subDay())->count();
+        
+        // Média de votos por história
+        $avgVotesPerStory = $totalStories > 0 ? round($totalVotes / $totalStories, 2) : 0;
+        
+        // Média de participantes por sala
+        $avgParticipantsPerRoom = $totalRooms > 0 ? round($totalParticipants / $totalRooms, 2) : 0;
+        
+        return view('dashboard', compact(
+            'totalRooms',
+            'activeRooms',
+            'totalParticipants',
+            'activeParticipants',
+            'totalStories',
+            'totalVotes',
+            'revealedStories',
+            'recentRooms',
+            'roomsToday',
+            'participantsToday',
+            'votesToday',
+            'avgVotesPerStory',
+            'avgParticipantsPerRoom'
+        ));
+    }
     
     /**
      * Limpa salas antigas (mais de 24h) ou sem participantes

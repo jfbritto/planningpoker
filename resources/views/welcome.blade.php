@@ -21,9 +21,14 @@
             Crie salas colaborativas, vote em tempo real e alcance consenso rapidamente com sua equipe. 
             <strong>Gratuito, rápido e fácil de usar!</strong>
         </p>
-        <a href="{{ route('rooms.create') }}" class="btn" style="background: white; color: #667eea; font-size: 18px; padding: 14px 32px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-            🚀 Criar Nova Sala
-        </a>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+            <a href="{{ route('dashboard') }}" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 16px; padding: 12px 24px;">
+                📊 Dashboard
+            </a>
+            <a href="{{ route('rooms.create') }}" class="btn" style="background: white; color: #667eea; font-size: 18px; padding: 14px 32px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                🚀 Criar Nova Sala
+            </a>
+        </div>
     </div>
 </div>
 

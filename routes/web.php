@@ -6,6 +6,7 @@ use App\Http\Controllers\VoteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [RoomController::class, 'index'])->name('welcome');
+Route::get('/dashboard', [RoomController::class, 'dashboard'])->name('dashboard');
 
 Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
 Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');

@@ -1,7 +1,8 @@
-<?php $__env->startSection('title', 'Planning Poker - Sistema de Estimativas Ágeis'); ?>
-<?php $__env->startSection('description', 'Sistema gratuito e colaborativo de Planning Poker para estimativas ágeis. Crie salas, vote em tempo real e alcance consenso rapidamente com sua equipe!'); ?>
-<?php $__env->startSection('og_title', 'Planning Poker - Sistema de Estimativas Ágeis'); ?>
-<?php $__env->startSection('og_description', 'Sistema gratuito e colaborativo de Planning Poker. Crie salas, vote em tempo real, revele resultados e alcance consenso rapidamente com sua equipe!'); ?>
+<meta property="og:title" content="Planning Poker">
+<meta property="og:description" content="Sistema colaborativo de Planning Poker para estimativas ágeis. Crie salas, vote em tempo real e alcance consenso rapidamente com sua equipe!">
+<meta property="og:image" content="/img/logo.jpg">
+<meta property="og:url" content="https://planningpoker.soavelveiculos.com.br/">
+<meta property="og:type" content="website">
 
 <?php $__env->startSection('content'); ?>
 <!-- Hero Section -->
@@ -18,9 +19,14 @@
             Crie salas colaborativas, vote em tempo real e alcance consenso rapidamente com sua equipe. 
             <strong>Gratuito, rápido e fácil de usar!</strong>
         </p>
-        <a href="<?php echo e(route('rooms.create')); ?>" class="btn" style="background: white; color: #667eea; font-size: 18px; padding: 14px 32px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-            🚀 Criar Nova Sala
-        </a>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+            <a href="<?php echo e(route('dashboard')); ?>" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); font-size: 16px; padding: 12px 24px;">
+                📊 Dashboard
+            </a>
+            <a href="<?php echo e(route('rooms.create')); ?>" class="btn" style="background: white; color: #667eea; font-size: 18px; padding: 14px 32px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                🚀 Criar Nova Sala
+            </a>
+        </div>
     </div>
 </div>
 
