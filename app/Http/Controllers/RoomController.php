@@ -133,6 +133,12 @@ class RoomController extends Controller
     public function show(Request $request, $code)
     {
         $room = Room::where('code', $code)->firstOrFail();
+        
+        // Verificar se a sala está ativa
+        if (!$room->is_active) {
+            return view('rooms.inactive', compact('room'));
+        }
+        
         $sessionId = Session::getId();
         $isCreator = $room->creator_session_id === $sessionId;
         
@@ -233,6 +239,16 @@ class RoomController extends Controller
     {
         // Cache key única por sala e história
         $room = Room::where('code', $code)->firstOrFail();
+        
+        // Verificar se a sala está ativa
+        if (!$room->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Esta sala não está mais ativa.',
+                'inactive' => true,
+            ], 403);
+        }
+        
         $activeStory = $room->activeStory();
         $sessionId = Session::getId();
         $isCreator = $room->creator_session_id === $sessionId;
@@ -543,6 +559,16 @@ class RoomController extends Controller
     public function heartbeat(Request $request, $code)
     {
         $room = Room::where('code', $code)->firstOrFail();
+        
+        // Verificar se a sala está ativa
+        if (!$room->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Esta sala não está mais ativa.',
+                'inactive' => true,
+            ], 403);
+        }
+        
         $sessionId = Session::getId();
         $isCreator = $room->creator_session_id === $sessionId;
 

@@ -14,6 +14,16 @@ class StoryController extends Controller
     public function startNew(Request $request, $roomCode)
     {
         $room = Room::where('code', $roomCode)->firstOrFail();
+        
+        // Verificar se a sala está ativa
+        if (!$room->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Esta sala não está mais ativa.',
+                'inactive' => true,
+            ], 403);
+        }
+        
         $sessionId = Session::getId();
         
         // Verificar se é o criador da sala
@@ -49,6 +59,16 @@ class StoryController extends Controller
     public function reveal(Request $request, $roomCode, $storyId)
     {
         $room = Room::where('code', $roomCode)->firstOrFail();
+        
+        // Verificar se a sala está ativa
+        if (!$room->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Esta sala não está mais ativa.',
+                'inactive' => true,
+            ], 403);
+        }
+        
         $sessionId = Session::getId();
         
         // Verificar se é o criador da sala

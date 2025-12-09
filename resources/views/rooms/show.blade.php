@@ -352,6 +352,17 @@
                 body: JSON.stringify({ value: voteValue })
             })
             .then(response => {
+                // Verificar se a resposta indica que a sala está inativa
+                if (response.status === 403) {
+                    return response.json().then(data => {
+                        if (data.inactive) {
+                            window.location.href = `/rooms/${roomCode}`;
+                            return;
+                        }
+                        throw new Error(data.message || `Erro HTTP: ${response.status}`);
+                    });
+                }
+                
                 // Verificar se a resposta é OK antes de parsear JSON
                 if (!response.ok) {
                     return response.json().then(data => {
@@ -363,6 +374,11 @@
                 return response.json();
             })
             .then(data => {
+                // Se a sala está inativa, não processar mais
+                if (data && data.inactive) {
+                    return;
+                }
+                
                 if (data.success) {
                     // Atualizar status imediatamente
                     updateVotesStatus();
@@ -538,8 +554,25 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                // Verificar se a resposta indica que a sala está inativa
+                if (response.status === 403) {
+                    return response.json().then(data => {
+                        if (data.inactive) {
+                            window.location.href = `/rooms/${roomCode}`;
+                            return;
+                        }
+                        throw new Error(data.message || 'Erro ao revelar votos');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
+                // Se a sala está inativa, não processar mais
+                if (data && data.inactive) {
+                    return;
+                }
+                
                 console.log('Resposta do reveal:', data);
                 if (data.success) {
                     // Marcar como revelado
@@ -616,6 +649,17 @@
             }
         })
         .then(response => {
+            // Verificar se a resposta indica que a sala está inativa
+            if (response.status === 403) {
+                return response.json().then(data => {
+                    if (data.inactive) {
+                        window.location.href = `/rooms/${roomCode}`;
+                        return;
+                    }
+                    throw new Error(data.message || `Erro HTTP: ${response.status}`);
+                });
+            }
+            
             if (!response.ok) {
                 return response.json().then(data => {
                     throw new Error(data.message || `Erro HTTP: ${response.status}`);
@@ -624,6 +668,11 @@
             return response.json();
         })
         .then(data => {
+            // Se a sala está inativa, não processar mais
+            if (data && data.inactive) {
+                return;
+            }
+            
             if (data.success) {
                 // Recarregar página para todos os usuários verem a nova estimativa
                 location.reload();
@@ -650,8 +699,26 @@
     // Atualização automática do status dos votos
     function updateVotesStatus() {
         fetch(`/rooms/${roomCode}/votes-status`)
-            .then(response => response.json())
+            .then(response => {
+                // Verificar se a resposta indica que a sala está inativa
+                if (response.status === 403) {
+                    return response.json().then(data => {
+                        if (data.inactive) {
+                            // Redirecionar para a página de sala inativa
+                            window.location.href = `/rooms/${roomCode}`;
+                            return;
+                        }
+                        throw new Error(data.message || 'Erro ao buscar status dos votos');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
+                // Se a sala está inativa, não processar mais
+                if (data && data.inactive) {
+                    return;
+                }
+                
                 // Verificar se uma nova estimativa foi criada (detectar mudança no count)
                 if (data.unrevealed_count !== undefined && data.unrevealed_count !== lastUnrevealedCount) {
                     lastUnrevealedCount = data.unrevealed_count;
@@ -760,6 +827,10 @@
             })
             .catch(error => {
                 console.error('Erro ao atualizar status dos votos:', error);
+                // Se for erro 403 (sala inativa), redirecionar
+                if (error.message && error.message.includes('403')) {
+                    window.location.href = `/rooms/${roomCode}`;
+                }
             });
     }
     
@@ -1312,7 +1383,20 @@
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 'Accept': 'application/json'
             }
-        }).catch(error => {
+        })
+        .then(response => {
+            // Verificar se a resposta indica que a sala está inativa
+            if (response.status === 403) {
+                return response.json().then(data => {
+                    if (data.inactive) {
+                        // Redirecionar para a página de sala inativa
+                        window.location.href = `/rooms/${roomCode}`;
+                    }
+                });
+            }
+            return response.json();
+        })
+        .catch(error => {
             console.error('Erro ao enviar heartbeat:', error);
         });
     }

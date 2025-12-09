@@ -20,6 +20,16 @@ class VoteController extends Controller
             ]);
 
             $room = Room::where('code', $roomCode)->firstOrFail();
+            
+            // Verificar se a sala está ativa
+            if (!$room->is_active) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Esta sala não está mais ativa.',
+                    'inactive' => true,
+                ], 403);
+            }
+            
             $story = $room->stories()->findOrFail($storyId);
             $sessionId = Session::getId();
 
