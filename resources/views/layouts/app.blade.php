@@ -231,7 +231,7 @@
         }
         
         .emoji-picker {
-            position: fixed;
+            position: absolute;
             z-index: 1000;
             background: white;
             border-radius: 8px;

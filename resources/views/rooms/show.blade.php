@@ -1273,11 +1273,14 @@
                 
                 // Função para posicionar o picker responsivamente (grudado no card)
                 function positionPicker() {
+                    // Obter dimensões do card (relativas ao próprio elemento)
+                    const cardWidth = card.offsetWidth;
+                    const cardHeight = card.offsetHeight;
+                    
+                    // Obter posição do card na viewport APENAS para verificar espaço vertical disponível
                     const cardRect = card.getBoundingClientRect();
-                    const viewportWidth = window.innerWidth;
                     const viewportHeight = window.innerHeight;
-                    const padding = 8; // Espaçamento mínimo da borda da tela
-                    const verticalOffset = 2; // Espaçamento mínimo do card (grudado)
+                    const padding = 8;
                     
                     // Resetar estilos
                     picker.style.transform = '';
@@ -1286,61 +1289,43 @@
                     picker.style.left = '';
                     picker.style.right = '';
                     
-                    // Usar dimensões fixas do CSS (200px de largura)
-                    const pickerWidth = 200; // Largura fixa definida no CSS
-                    const pickerHeight = 120; // Altura estimada (4 linhas de emojis + padding)
+                    // Dimensões do picker
+                    const pickerWidth = 200;
+                    const pickerHeight = 120;
                     
-                    // Calcular posição horizontal (centralizar no card)
-                    const cardCenterX = cardRect.left + (cardRect.width / 2);
-                    let leftPosition = cardCenterX - (pickerWidth / 2);
-                    let transformX = '';
+                    // POSIÇÃO HORIZONTAL: sempre centralizado no card (relativo ao card)
+                    const leftPosition = cardWidth / 2;
+                    const transformX = 'translateX(-50%)';
                     
-                    // Ajustar se ultrapassar à esquerda
-                    if (leftPosition < padding) {
-                        leftPosition = cardRect.left;
-                        transformX = '';
-                    }
-                    // Ajustar se ultrapassar à direita
-                    else if (leftPosition + pickerWidth > viewportWidth - padding) {
-                        leftPosition = cardRect.right - pickerWidth;
-                        transformX = '';
-                    } else {
-                        // Centralizar usando transform para precisão
-                        leftPosition = cardCenterX;
-                        transformX = 'translateX(-50%)';
-                    }
-                    
-                    // Calcular posição vertical (sempre próximo ao card)
+                    // POSIÇÃO VERTICAL: grudado no card (0px de distância)
                     const spaceAbove = cardRect.top;
                     const spaceBelow = viewportHeight - cardRect.bottom;
                     let topPosition;
                     
-                    // Preferir acima se houver espaço suficiente (grudado)
-                    if (spaceAbove >= pickerHeight + verticalOffset) {
-                        topPosition = cardRect.top - pickerHeight - verticalOffset;
+                    // Preferir acima se houver espaço suficiente (grudado - 0px)
+                    if (spaceAbove >= pickerHeight + padding) {
+                        topPosition = -pickerHeight; // Acima, grudado
                     }
-                    // Se não houver espaço acima, posicionar abaixo (grudado)
-                    else if (spaceBelow >= pickerHeight + verticalOffset) {
-                        topPosition = cardRect.bottom + verticalOffset;
+                    // Se não houver espaço acima, posicionar abaixo (grudado - 0px)
+                    else if (spaceBelow >= pickerHeight + padding) {
+                        topPosition = cardHeight; // Abaixo, grudado
                     }
-                    // Se não houver espaço suficiente, usar o lado com mais espaço mas manter grudado
+                    // Se não houver espaço suficiente, usar o lado com mais espaço
                     else {
                         if (spaceAbove > spaceBelow) {
-                            // Posicionar acima, mas ajustar para não sair da tela
-                            topPosition = Math.max(padding, cardRect.top - pickerHeight - verticalOffset);
+                            // Posicionar acima, grudado (ajustar altura se necessário)
+                            topPosition = -Math.min(pickerHeight, spaceAbove - padding);
                         } else {
-                            // Posicionar abaixo, mas ajustar para não sair da tela
-                            topPosition = Math.min(viewportHeight - pickerHeight - padding, cardRect.bottom + verticalOffset);
+                            // Posicionar abaixo, grudado
+                            topPosition = cardHeight;
                         }
                     }
                     
-                    // Aplicar posições
-                    picker.style.position = 'fixed';
+                    // Aplicar posições (position: absolute em relação ao card que tem position: relative)
+                    picker.style.position = 'absolute';
                     picker.style.left = `${leftPosition}px`;
                     picker.style.top = `${topPosition}px`;
-                    if (transformX) {
-                        picker.style.transform = transformX;
-                    }
+                    picker.style.transform = transformX;
                 }
                 
                 // Mostrar picker ao hover e posicionar responsivamente
